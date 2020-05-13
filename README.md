@@ -1,1 +1,0 @@
-# data-modeling-postgres
