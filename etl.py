@@ -2,7 +2,7 @@ import os
 import glob
 import psycopg2
 import pandas as pd
-import datetime
+import datetime as dt
 import json
 from sql_queries import *
 
