@@ -1,6 +1,6 @@
 ## Data Modeling with Postgres
 
-A sample company, Sparkify,` has provided data from their music streaming app in JSON format, [song data](data/song_data/) and [log data](data/log_data/). The goal is to model a relational database using these JSON files and create an ETL pipeline so it can be queried to understand what songs their users are listening to. The data is a sample subset of real data from the [Million Song Dataset](https://labrosa.ee.columbia.edu/millionsong/).
+A sample company, Sparkify, has provided data from their music streaming app in JSON format, [song data](data/song_data/) and [log data](data/log_data/). The goal is to model a relational database using these JSON files and create an ETL pipeline so it can be queried to understand what songs their users are listening to. The data is a sample subset of real data from the [Million Song Dataset](https://labrosa.ee.columbia.edu/millionsong/).
 
 <hr>
 
@@ -68,9 +68,9 @@ Note: The database is created locally with a sample username and password. To us
 
 ### B. Create an ETL Pipeline
 
-1. Extract: In [etl.ipynb](etl.ipynb), I created a connection to the database and developed an ETL procedure for each table, converting the JSON to Python dataframes according to the model schema above. 
-2. Transform: Some of the [log data](data/log_data/) required cleaning of null values, duplicates and data types. In addition, since the original data was only a subset, many of the songs/artists in the [song data](data/song_data/) were not found in the [log data](data/log_data/). All logs were still recorded in `songplays` but missing `song_id` and `artist_id` were recorded as `None`.
-3. Load: Once transforming the data was complete for each table, the data was loaded into the database using Psycopg to execute the SQL insert queries derived from [sql_queries.py](sql_queries.py).
+1. **Extract**: In [etl.ipynb](etl.ipynb), I created a connection to the database and developed an ETL procedure for each table, converting the JSON to Python dataframes according to the model schema above. 
+2. **Transform**: Some of the [log data](data/log_data/) required cleaning of null values, duplicates and data types. In addition, since the original data was only a subset, many of the songs/artists in the [song data](data/song_data/) were not found in the [log data](data/log_data/). All logs were still recorded in `songplays` but missing `song_id` and `artist_id` were recorded as `None`.
+3. **Load**: Once transforming the data was complete for each table, the data was loaded into the database using Psycopg to execute the SQL insert queries derived from [sql_queries.py](sql_queries.py).
 4. The relevant code from [etl.ipynb](etl.ipynb) was transferred to [etl.py](etl.py) to be able to run from bash/Terminal.
 5. [test.ipynb](test.ipynb) was used to confirm the tables were created properly and the data was loaded.
 
