@@ -39,7 +39,7 @@ def process_log_file(cur, filepath):
     for i in range(len(t)):
         try:
             timestamp = ()
-            start_time = dt.datetime.fromtimestamp(t[i][0] / 1000)
+            start_time = dt. (t[i][0] / 1000)
             start_time2 = dt.datetime.strptime(
                 str(start_time), '%Y-%m-%d %H:%M:%S.%f')
             timestamp = (start_time, start_time2.strftime('%H'), start_time2.strftime('%d'),
@@ -108,7 +108,7 @@ def process_data(cur, conn, filepath, func):
 
 def main():
     conn = psycopg2.connect(
-        "host=127.0.0.1 dbname=sparkifydb user=postgres password=3ll3nhsu")
+        "host=127.0.0.1 dbname=sparkifydb user=student password=student")
     cur = conn.cursor()
     conn.set_session(autocommit=True)
 
