@@ -2,8 +2,9 @@
 
 A sample company, Sparkify,` has provided data from their music streaming app in JSON format, [song data](data/song_data/) and [log data](data/log_data/). The goal is to model a relational database using these JSON files and create an ETL pipeline so it can be queried to understand what songs their users are listening to. The data is a sample subset of real data from the [Million Song Dataset](https://labrosa.ee.columbia.edu/millionsong/).
 
-### Creating a relational database
+<hr>
 
+### A. Create a relational database
 Note: The database is created locally with a sample username and password. To use this on your local environment, all connections to the databse must be replaced with your username and password.
 
 1. First, I modeled the following tables in a star schema. Each of the dimension tables are denormalized so there are duplicate references to data but this allows for fast queries on simple joins.
@@ -63,7 +64,9 @@ Note: The database is created locally with a sample username and password. To us
 
 3. [create_tables.py](create_tables.py) connects to the database using Psycopg (a Postgres wrapper) to drop any existing tables and create new tables for each session.  
 
-### Creating an ETL Pipeline
+<hr>
+
+### B. Create an ETL Pipeline
 
 1. Extract: In [etl.ipynb](etl.ipynb), I created a connection to the database and developed an ETL procedure for each table, converting the JSON to Python dataframes according to the model schema above. 
 2. Transform: Some of the [log data](data/log_data/) required cleaning of null values, duplicates and data types. In addition, since the original data was only a subset, many of the songs/artists in the [song data](data/song_data/) were not found in the [log data](data/log_data/). All logs were still recorded in `songplays` but missing `song_id` and `artist_id` were recorded as `None`.
@@ -71,6 +74,8 @@ Note: The database is created locally with a sample username and password. To us
 4. The relevant code from [etl.ipynb](etl.ipynb) was transferred to [etl.py](etl.py) to be able to run from bash/Terminal.
 5. [test.ipynb](test.ipynb) was used to confirm the tables were created properly and the data was loaded.
 
-### Executing the app in Bash/Terminal
+<hr>
+
+### C. Execute the app in Bash/Terminal
 1. To run the program, first run `python create_tables.py` to drop any old tables and create new empty tables.
 2. Then run `python etl.py` to perform ETL on any sample data in the `data/` folder.
