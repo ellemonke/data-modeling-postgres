@@ -49,19 +49,21 @@ def process_log_file(cur, filepath):
         except KeyError:
             pass
 
-    time_data = tuple(time_data)
-
     column_labels = ('start_time', 'hour', 'day',
                      'week', 'month', 'year', 'weekday')
 
-    time_df = pd.DataFrame(columns=column_labels, data=time_data)
+    time_rows = []
+    for time in time_data:
+        time_rows.append(dict(zip(column_labels, time)))
+        
+    time_df = pd.DataFrame(time_rows, columns=column_labels)
 
     for i, row in time_df.iterrows():
         cur.execute(time_table_insert, list(row))
 
     # load user table
     user_df = log_df[['userId', 'firstName', 'lastName', 'gender', 'level']]
-    user_df = user_df.dropna()
+    user_df = user_df.dropna(how='all')
 
     # insert user records
     for i, row in user_df.iterrows():
@@ -107,7 +109,7 @@ def process_data(cur, conn, filepath, func):
 
 def main():
     conn = psycopg2.connect(
-        "host=127.0.0.1 dbname=sparkifydb user=student password=student")
+        "host=127.0.0.1 dbname=sparkifydb user=postgres password=3ll3nhsu")
     cur = conn.cursor()
     conn.set_session(autocommit=True)
 
