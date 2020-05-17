@@ -13,8 +13,8 @@ Note: The database is created locally with a sample username and password. To us
    | Column Name | Data Source | Constraints |
    | ----------- | ----------- | ----------- |
    | `songplay_id` | auto-generated SERIAL | PRIMARY KEY | 
-   | `start_time` | `ts` from [log data](data/log_data/) converted to timestamp | FOREIGN KEY references time|
-   | `user_id` | `userId` from [log data](data/log_data/) | FOREIGN KEY references users |
+   | `start_time` | `ts` from [log data](data/log_data/) converted to timestamp | REFERENCES time |
+   | `user_id` | `userId` from [log data](data/log_data/) | REFERENCES users |
    | `level` | `level` from [log data](data/log_data/) | NOT NULL |
    | `song_id` | `song_id` from [song data](data/song_data/) | |
    | `artist_id` | `artist_id` from [song data](data/song_data/) | |
