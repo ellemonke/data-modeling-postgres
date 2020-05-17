@@ -27,7 +27,7 @@ Note: The database is created locally with a sample username and password. To us
    | ----------- | ----------- | ----------- |
    | `song_id` | `song_id` from [song data](data/song_data/) | PRIMARY KEY |
    | `title` | `title` from [song data](data/song_data/) | NOT NULL |
-   | `artist` | `artist_id` from [song data](data/song_data/) | REFERENCES artists |
+   | `artist_id` | `artist_id` from [song data](data/song_data/) | REFERENCES artists |
    | `year` | `year` from [song data](data/song_data/) | |
    | `duration` | `duration` from [song data](data/song_data/) | NOT NULL |
 
