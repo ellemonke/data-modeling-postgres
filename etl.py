@@ -8,6 +8,13 @@ from sql_queries import *
 
 
 def process_song_file(cur, filepath):
+    """Processes single song file from data/song_data/.
+    
+       1. Opens song file. 
+       2. Inserts 'song_id', 'title', 'artist_id', 'year', 'duration' as one record into the songs table.
+       3. Inserts 'artist_id', 'artist_name', 'artist_location', 'artist_latitude', 'artist_longitude' as one record into the artists table.
+    """
+
     # open song file
     songs_df = pd.read_json(filepath, lines=True)
 
@@ -17,20 +24,31 @@ def process_song_file(cur, filepath):
     cur.execute(song_table_insert, song_data)
 
     # insert artist record
-    artists = songs_df[['artist_id', 'artist_name',
-                        'artist_location', 'artist_latitude', 'artist_longitude']]
+    artists = songs_df[['artist_id', 'artist_name', 'artist_location', 'artist_latitude', 'artist_longitude']]
     artist_data = artists.values[0].tolist()
     cur.execute(artist_table_insert, artist_data)
 
 
 def process_log_file(cur, filepath):
+    """Processes single log file (including multiple records per day) from data/log_data/.
+        
+       1. Opens log file. 
+       2. Filters only the logs from the NextSong page.
+       3. Converts column 'ts' in milliseconds to timestamps.
+       4. Parses timestamps to 'hour', 'day', 'week', 'month', 'year', 'weekday'.
+       5. Inserts all time data to time table.
+       6. Inserts 'userId', 'firstName', 'lastName', 'gender', 'level' as one record into the users table.
+       7. Creates a fact table called 'songplays' 
+       8. Inserts 'start_time', 'user_id', 'level', 'song_id' (if exists), 'artist_id' (if exists), 'session_id', 'location', 'user_agent' as one record into the songplays table.
+    """
+
     # open log file
     log_df = pd.read_json(filepath, lines=True)
 
     # filter by NextSong action
     log_df = log_df.loc[log_df.page == "NextSong"]
 
-    # convert timestamp column to datetime
+    # convert timestamp (ts) column to datetime object
     t = log_df.ts.values
     t = t.reshape(-1, 1)
 
@@ -40,15 +58,19 @@ def process_log_file(cur, filepath):
         try:
             timestamp = ()
             start_time = dt.datetime.fromtimestamp(t[i][0] / 1000)
+
+            # parse datetime object 
             start_time2 = dt.datetime.strptime(str(start_time), '%Y-%m-%d %H:%M:%S.%f')
+
+            # append start_time, hour, day, week, month, year, weekday as one element in time_data
             timestamp = (start_time, start_time2.strftime('%H'), start_time2.strftime('%d'),
-                         start_time2.strftime(
-                             '%U'), start_time2.strftime('%m'),
+                         start_time2.strftime('%U'), start_time2.strftime('%m'),
                          start_time2.strftime('%Y'), start_time2.strftime('%u'))
             time_data.append(timestamp)
         except KeyError:
             pass
 
+    # create time dataframe and add time_data
     column_labels = ('start_time', 'hour', 'day',
                      'week', 'month', 'year', 'weekday')
 
@@ -89,6 +111,8 @@ def process_log_file(cur, filepath):
 
 
 def process_data(cur, conn, filepath, func):
+    """Processes all files found in filepath using function func."""
+
     # get all files matching extension from directory
     all_files = []
     for root, dirs, files in os.walk(filepath):
