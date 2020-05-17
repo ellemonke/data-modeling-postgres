@@ -10,55 +10,55 @@ Note: The database is created locally with a sample username and password. To us
 1. First, I modeled the following tables, their relationships and constraints in a star schema. Each of the dimension tables are denormalized so there are duplicate references to data but this allows for fast queries on simple joins.
 
    #### `songplays` (fact table)
-   | Column Name | Data Source |
-   | ----------- | ----------- |
-   | `songplay_id` PK | auto-generated SERIAL | 
-   | `start_time` FK from `time` table | `ts` from [log data](data/log_data/) converted to timestamp |
-   | `user_id` FK from `users` table | `userId` from [log data](data/log_data/) |
-   | `level` | `level` from [log data](data/log_data/) |
-   | `song_id` FK from `songs` table | `song_id` from [song data](data/song_data/) |
-   | `artist_id` FK from `artists` table | `artist_id` from [song data](data/song_data/) |
-   | `session_id` | `sessionId` from [log data](data/log_data/) |
-   | `location` | `location` from [log data](data/log_data/) |
-   | `user_agent` | `userAgent` from [log data](data/log_data/) |
+   | Column Name | Data Source | Constraints |
+   | ----------- | ----------- | ----------- |
+   | `songplay_id` | auto-generated SERIAL | PRIMARY KEY | 
+   | `start_time` | `ts` from [log data](data/log_data/) converted to timestamp | FOREIGN KEY references time|
+   | `user_id` | `userId` from [log data](data/log_data/) | FOREIGN KEY references users |
+   | `level` | `level` from [log data](data/log_data/) | NOT NULL |
+   | `song_id` | `song_id` from [song data](data/song_data/) | |
+   | `artist_id` | `artist_id` from [song data](data/song_data/) | |
+   | `session_id` | `sessionId` from [log data](data/log_data/) | NOT NULL |
+   | `location` | `location` from [log data](data/log_data/) | NOT NULL |
+   | `user_agent` | `userAgent` from [log data](data/log_data/) | NOT NULL |
 
    #### `songs` (dimension table)
-   | Column Name | Data Source |
-   | ----------- | ----------- |
-   | `song_id` PK | `song_id` from [song data](data/song_data/) |
-   | `title` | `title` from [song data](data/song_data/) |
-   | `artist` FK from `artists` table | `artist_id` from [song data](data/song_data/) |
-   | `year` | `year` from [song data](data/song_data/) |
-   | `duration` | `duration` from [song data](data/song_data/) |
+   | Column Name | Data Source | Constraints |
+   | ----------- | ----------- | ----------- |
+   | `song_id` | `song_id` from [song data](data/song_data/) | PRIMARY KEY |
+   | `title` | `title` from [song data](data/song_data/) | NOT NULL |
+   | `artist` | `artist_id` from [song data](data/song_data/) | NOT NULL |
+   | `year` | `year` from [song data](data/song_data/) | |
+   | `duration` | `duration` from [song data](data/song_data/) | NOT NULL |
 
    #### `artists` (dimension table)
-   | Column Name | Data Source |
-   | ----------- | ----------- |
-   | `artist_id` PK | `artist_id` from [song data](data/song_data/) |
-   | `name` | `artist_name` from [song data](data/song_data/) |
-   | `location` | `artist_location` from [song data](data/song_data/) |
-   | `latitude` | `artist_latitude` from [song data](data/song_data/) |
-   | `longitude` | `artist_longitude` from [song data](data/song_data/) |
+   | Column Name | Data Source | Constraints |
+   | ----------- | ----------- | ----------- |
+   | `artist_id` | `artist_id` from [song data](data/song_data/) | PRIMARY KEY |
+   | `name` | `artist_name` from [song data](data/song_data/) | NOT NULL |
+   | `location` | `artist_location` from [song data](data/song_data/) | |
+   | `latitude` | `artist_latitude` from [song data](data/song_data/) | |
+   | `longitude` | `artist_longitude` from [song data](data/song_data/) | |
 
    #### `time` (dimension table)
-   | Column Name | Data Source |
-   | ----------- | ----------- |
-   | `start_time` PK | `ts` from [log data](data/log_data/) converted to timestamp |
-   | `hour` | hour (`%H`) parsed from `start_time` |
-   | `day` | day (`%d`) parsed from `start_time` |
-   | `week` | week (`%U`) parsed from `start_time` |
-   | `month` | month (`%m`) parsed from `start_time` |
-   | `year` | year (`%Y`) parsed from `start_time` |
-   | `weekday` | weekday (`%u`) parsed from `start_time` |
+   | Column Name | Data Source | Constraints |
+   | ----------- | ----------- | ----------- |
+   | `start_time` | `ts` from [log data](data/log_data/) converted to timestamp | PRIMARY KEY |
+   | `hour` | hour (`%H`) parsed from `start_time` | NOT NULL |
+   | `day` | day (`%d`) parsed from `start_time` | NOT NULL |
+   | `week` | week (`%U`) parsed from `start_time` | NOT NULL |
+   | `month` | month (`%m`) parsed from `start_time` | NOT NULL |
+   | `year` | year (`%Y`) parsed from `start_time` | NOT NULL |
+   | `weekday` | weekday (`%u`) parsed from `start_time` | NOT NULL |
    
    #### `users` (dimension table)
-   | Column Name | Data Source |
-   | ----------- | ----------- |
-   | `user_id` PK | `userId` from [log data](data/log_data/) |
-   | `first_name ` | `firstName` from [log data](data/log_data/) |
-   | `last_name` | `lastName` from [log data](data/log_data/) |
-   | `gender ` | `gender` from [log data](data/log_data/) |
-   | `level ` | `level` from [log data](data/log_data/) |
+   | Column Name | Data Source | Constraints |
+   | ----------- | ----------- | ----------- |
+   | `user_id` | `userId` from [log data](data/log_data/) | PRIMARY KEY |
+   | `first_name ` | `firstName` from [log data](data/log_data/) | NOT NULL |
+   | `last_name` | `lastName` from [log data](data/log_data/) | NOT NULL |
+   | `gender ` | `gender` from [log data](data/log_data/) | |
+   | `level ` | `level` from [log data](data/log_data/) | |
 
 2. Then in [sql_queries.py](sql_queries.py), I wrote SQL queries to CREATE, INSERT INTO, and DROP each table in the database. The last query selects `song_id` and `artist_id` from a table JOIN (`songs` and `artists`) to then insert into the `songplays` table. 
 
