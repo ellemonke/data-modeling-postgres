@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS users (user_id int PRIMARY KEY, \
 song_table_create = ("""
 CREATE TABLE IF NOT EXISTS songs (song_id varchar PRIMARY KEY, \
     title varchar NOT NULL,\
-    artist_id varchar NOT NULL, \
+    artist_id varchar REFERENCES artists, \
     year int, \
     duration numeric NOT NULL);
 """)

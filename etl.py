@@ -11,22 +11,22 @@ def process_song_file(cur, filepath):
     """Processes single song file from data/song_data/.
     
        1. Opens song file. 
-       2. Inserts 'song_id', 'title', 'artist_id', 'year', 'duration' as one record into the songs table.
-       3. Inserts 'artist_id', 'artist_name', 'artist_location', 'artist_latitude', 'artist_longitude' as one record into the artists table.
+       2. Inserts 'artist_id', 'artist_name', 'artist_location', 'artist_latitude', 'artist_longitude' as one record into the artists table.
+       3. Inserts 'song_id', 'title', 'artist_id', 'year', 'duration' as one record into the songs table.
     """
 
     # open song file
     songs_df = pd.read_json(filepath, lines=True)
 
-    # insert song record
-    songs = songs_df[['song_id', 'title', 'artist_id', 'year', 'duration']]
-    song_data = songs.values[0].tolist()
-    cur.execute(song_table_insert, song_data)
-
     # insert artist record
     artists = songs_df[['artist_id', 'artist_name', 'artist_location', 'artist_latitude', 'artist_longitude']]
     artist_data = artists.values[0].tolist()
     cur.execute(artist_table_insert, artist_data)
+    
+    # insert song record
+    songs = songs_df[['song_id', 'title', 'artist_id', 'year', 'duration']]
+    song_data = songs.values[0].tolist()
+    cur.execute(song_table_insert, song_data)
 
 
 def process_log_file(cur, filepath):
